@@ -1,0 +1,109 @@
+#include <Wire.h>
+#include <BME280_MOD-1022.h>
+#include <DHT.h> //Humidity and Temperature
+#include <PubSubClient.h>
+#include <ESP8266WiFi.h>
+
+#ifndef BEES_H
+#define BEES_H
+
+// CLASS STRUCTURE
+
+//BEES.ino
+//    |
+//    Sensors   --Temperature sensors, weight, light, noise, etc.
+//    Comms    -- Radio Wifi Bluetooth
+//    Messaging -- Pub Sub 
+
+//start form classes.  used for the old radio shit
+/*int ON_LED_PIN = 4;
+int ERROR_LED_PIN = 5;
+int TRANSMIT_LED_PIN = 6;
+int RADIO_BITS_PER_SECOND = 2000;
+
+long lastMsg = 0;
+char msg[50];
+int value = 0;
+*/
+// for testing only 
+//char *msg;
+String Message_Out;
+
+struct PubSubInfo {
+  char BeeHiveID[255];
+  char pubMessage[255];
+  char pubSubscribe[255];
+}PubSubInfo_t;
+
+struct Bee_Data {
+ float HIVE_Humidity;
+ float HIVE_Temperature;
+ float HIVE_Brood_Temperature;
+ float HIVE_Brood_Humidity;
+ float HIVE_External_Temperature;
+ float HIVE_External_Humidity;
+ float HIVE_Weight;
+ String HIVE_GPS;
+ float HIVE_Sound_Level;
+}Bee_Data_t;
+
+enum Return_Codes_Type {
+  Success = 666,
+  Failure = -666,
+  Connected = 1000,
+  READ_FAILURE = -9999 
+};
+
+enum Limits_Type { // defined limits 
+  Temperature_High_Limit = 13,// about 55 degrees in F There may be a problem
+  Temperature_Low_Limit = 38, // about 100 degrees F the hive will stabilize around 95 even in the summer. Higher temps will affect hive health
+  Humidity_High_Limit = 80, // brood mummification occurs 
+  Humidity_Low_Limit = 50 // at levels below 50% relative humidity in the brood cells no eggs hatch 
+};
+
+
+
+//////////////////////////////////////////////////////////////////////////////WIFI//////////////////////////////////////////////////////////////////////
+// These are the SSID and PASSWORD to connect to your Wifi Network
+//  put details appropriate for your network between the quote marks,
+//  eg  #define ESP8266_SSID "YOUR_SSID"
+
+// make into struct wifi
+const char* ssid = "Useless_Airtraffic";
+const char* password = "fccpart15";
+
+WiFiClient Wificlient;
+
+//////////////////////////////////////////////////////////////////////////////MQTT///////////////////////////////////////////////////////////////////////
+//http://m2mio.tumblr.com/post/30048662088/a-simple-example-arduino-mqtt-m2mio
+// struct mqtt
+//const char* mqtt_server = "192.168.10.170";
+// Update these with values suitable for your network.
+IPAddress server(192, 168, 10, 170);
+uint16_t mqtt_port = 1883;
+//PubSubClient client(mqtt_server, mqtt_port , MQTTcallback, Wificlient);
+//PubSubClient client(mqtt_server, mqtt_port , Wificlient);
+//WiFiClient wclient;
+PubSubClient client(Wificlient, server);
+
+struct Bee_Data Hive_Data;
+struct PubSubInfo PubSubData;
+
+int analogPin = A0;
+
+//////////////////////////////////////////////////////////////////////////////Function prototypes///////////////////////////////////////////////////////////////////////
+// init the sensors and other hardware
+int Initialize_Humidity_And_Temperature_Sensor(DHT dht_type);
+int Initialize_Loadcell_Amplifer(void);
+//int Initialize_Radio_Frequency_Link(void); // maybe build a mesh network at some point.
+//int Radio_Send_Data(char * msg);
+//char * Radio_Receive_Data(void);
+String Message_Builder(Bee_Data BeeType);
+String Message_Builder_JSON(Bee_Data BeeType);
+String Generate_ClientName();
+
+int Initialize_Wifi(void);
+int Initialize_MQTT(String clientName);
+
+#endif /* GRANDFATHER_H */
+

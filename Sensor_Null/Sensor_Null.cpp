@@ -1,0 +1,57 @@
+/*************************************************** 
+  This is a library for a null sensor object
+
+  These sensors use I2C to communicate, 2 pins are required to  
+  interface
+  Adafruit invests time and resources providing this open source code, 
+  please support Adafruit and open-source hardware by purchasing 
+  products from Adafruit!
+
+  Written by Limor Fried/Ladyada for Adafruit Industries.  
+  BSD license, all text above must be included in any redistribution
+ ****************************************************/
+
+#include "Sensor_Null.h"
+#if defined(__AVR__)
+  #include <util/delay.h>
+#endif
+
+Sensor_Null::Sensor_Null() {
+
+	setSensor();
+}
+
+bool Sensor_Null::begin(uint8_t addr) {
+	// always return true
+  return true;
+}
+
+
+void Sensor_Null::setSensor()
+{
+	Sensor_Infomation.name = "SENSOR NULL";    /**< sensor name */
+    Sensor_Infomation.version = 1.0;          /**< version of the hardware + driver */
+    Sensor_Infomation.sensor_id = 0;          /**< unique sensor identifier */
+   // float    max_value;                       /**< maximum value of this sensor's value in SI units */
+    //float    min_value;                       /**< minimum value of this sensor's value in SI units */
+    //float    resolution;                      /**< smallest difference between two values reported by this sensor */
+    //int32_t  min_delay;                       /**< min delay in microseconds between events. zero = not a constant rate */
+												 /**< Vector containing the supported functions of the sensor- functions from sensors_type_t */ 
+}
+
+sensor_t Sensor_Null::getSensor()
+{
+	return Sensor_Infomation;
+}
+
+float Sensor_Null::getValue(int Value_Type)
+{
+			return -9999.99;
+}
+
+
+std::unique_ptr<Sensor_Wrapper> Sensor_Null::clone()
+{
+	std::unique_ptr <Sensor_Null> return_ptr(new Sensor_Null(*this));
+	return std::move(return_ptr);
+}

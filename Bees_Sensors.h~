@@ -1,0 +1,33 @@
+#include <Wire.h>
+#include <BME280_MOD-1022.h>
+#include <DHT.h> //Humidity and Temperature
+#include "Bees.h"
+
+
+//Return_Codes_Type ReturnCode;
+
+//////////////////////////////////////////////////////////////////////////////Temperature / humidity / pressure //////////////////////////////////////////////////////////////////////
+// Connect pin 1 (on the left) of the sensor to +5V
+// NOTE: If using a board with 3.3V logic like an Arduino Due connect pin 1
+// to 3.3V instead of 5V!
+// Connect pin 2 of the sensor to whatever your DHTPIN is
+// Connect pin 4 (on the right) of the sensor to GROUND
+// Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
+//crap for the //Humidity and Temperature sensor DHT-22
+int DHTPIN = 2;    // what pin we're connected to
+int DHTPIN2 = 4;
+int DHTTYPE = DHT22;    // DHT 22  (AM2302)
+///// Temperature types
+// create the sensor object
+DHT dht(DHTPIN, DHTTYPE);
+//RH_ASK (uint16_t speed=2000, uint8_t rxPin=11, uint8_t txPin=12, uint8_t pttPin=10, bool pttInverted=false)
+//RH_ASK TxRxRadio;
+DHT dht_External_Temperature(DHTPIN2, DHTTYPE);
+
+//start reading input data
+float Read_Temperature_i2c();
+float Read_Temperature(DHT dht_type);
+float Read_Humidity_i2c();
+float Read_Humidity(DHT dht_type);
+float Read_Presure_i2c();
+float Read_Weight();
